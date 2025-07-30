@@ -25,14 +25,14 @@ async def create_contact(contact: ContactCreate, service: ContactService = Depen
     
     
 
-@router.patch('/{id}', response_model=ContactSchema)
-async def update_contact(id: int, contact: ContactUpdate, service: ContactService = Depends(get_contact_service)):
-    return await service.update_contact(id, contact)
+@router.patch('/{contact_id}', response_model=ContactSchema)
+async def update_contact(contact_id: int, contact: ContactUpdate, service: ContactService = Depends(get_contact_service)):
+    return await service.update_contact(contact_id, contact)
     
     
-@router.delete('/{id}')
-async def delete_contact(id: int, service: ContactService = Depends(get_contact_service)):
-    return await service.delete_contact(id)
+@router.delete('/{contact_id}')
+async def delete_contact(contact_id: int, service: ContactService = Depends(get_contact_service)):
+    return await service.delete_contact(contact_id)
 
 @router.get('/birthdays')
 async def get_upcoming_birthdays(service: ContactService = Depends(get_contact_service)):
