@@ -18,7 +18,7 @@ class AuthService:
         exist_user = result.scalar_one_or_none()
         if exist_user:
             raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Account already exists")
-        new_user = User(email=body.username, password=get_password_hash(body.password))
+        new_user = User(email=body.username, password_hash=get_password_hash(body.password))
         self.db.add(new_user)
         await self.db.commit()
         await self.db.refresh(new_user)
@@ -31,7 +31,7 @@ class AuthService:
         user = result.scalar_one_or_none()
         if user is None:
             raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid email")
-        if not verify_password(body.password, user.password):
+        if not verify_password(body.password, user.password_hash):
             raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid password")
 
         access_token = await create_access_token(data={"sub": user.email})
